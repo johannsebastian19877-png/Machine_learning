@@ -1,0 +1,75 @@
+# =========================================================================
+# Python
+# =========================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+build/
+dist/
+
+# =========================================================================
+# Virtual environments
+# =========================================================================
+venv/
+env/
+ENV/
+.venv/
+.env
+
+# =========================================================================
+# Jupyter
+# =========================================================================
+.ipynb_checkpoints/
+*-checkpoint.ipynb
+
+# Si quieren commitear notebooks con outputs, comentar la siguiente linea.
+# Si prefieren notebooks limpios, descomentar y usar nbstripout:
+# *.ipynb
+
+# =========================================================================
+# Artifacts del pipeline (regenerables ejecutando los notebooks)
+# =========================================================================
+data/*.csv
+data/*.parquet
+data/*.png
+data/*.json
+data/*.txt
+models/*.pt
+models/*.zip
+models/*.pkl
+logs/
+
+# Mantener directorios vacios para que el pipeline encuentre las rutas
+!data/.gitkeep
+!models/.gitkeep
+
+# =========================================================================
+# IDE / Editor
+# =========================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =========================================================================
+# Testing / coverage
+# =========================================================================
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.cache/
+
+# =========================================================================
+# OS
+# =========================================================================
+.DS_Store
+desktop.ini

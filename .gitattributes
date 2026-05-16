@@ -1,0 +1,12 @@
+# Normaliza line endings cross-platform (Win/Mac/Linux)
+* text=auto eol=lf
+
+# Notebooks como text (diff legible)
+*.ipynb text
+
+# Binarios
+*.pt binary
+*.zip binary
+*.parquet binary
+*.png binary
+*.docx binary
