@@ -17,7 +17,7 @@ EXPECTED_NOTEBOOKS = [
     "09_backtest.ipynb",
 ]
 
-EXPECTED_DOCS = ["README.md", "PLAN_PROYECTO.md", "AUDITORIA.md", "LICENSE"]
+EXPECTED_DOCS = ["README.md", "INFORME_FINAL_PROYECTO.md", "LICENSE"]
 EXPECTED_CONFIG = ["requirements.txt", ".gitignore", "params.yaml", "Makefile"]
 
 

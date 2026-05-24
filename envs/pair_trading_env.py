@@ -5,8 +5,8 @@ spread_ema5, spread_ema20, rsi, bollinger_b, gsr_z, lstm_prob_up, position_actua
 
 Acciones: discretas {-1: short spread, 0: flat, 1: long spread}.
 
-Reward: PnL net del spread (incluye costos de transaccion proporcionales al cambio
-de posicion), con un termino opcional de penalizacion por turnover.
+Reward: PnL neto del spread con pesos normalizados por exposicion bruta
+(`1 + abs(beta)`) y costos proporcionales al turnover real de las dos piernas.
 """
 from __future__ import annotations
 
@@ -14,6 +14,8 @@ import numpy as np
 import pandas as pd
 import gymnasium as gym
 from gymnasium import spaces
+
+from src.backtest import pair_weights
 
 
 class PairTradingEnv(gym.Env):
@@ -68,7 +70,7 @@ class PairTradingEnv(gym.Env):
     def _pnl_step(self, new_position: int) -> float:
         """PnL para mover de self.position -> new_position al cierre de t,
         observado al cierre de t+1."""
-        # PnL del spread (con beta del dia anterior, anti-look-ahead)
+        # PnL del spread aplicado de t a t+1 con beta disponible en t.
         p_g_t  = self.df.iloc[self.t]["Gold"]
         p_g_n  = self.df.iloc[self.t + 1]["Gold"]
         p_s_t  = self.df.iloc[self.t]["Silver"]
@@ -76,15 +78,26 @@ class PairTradingEnv(gym.Env):
         beta   = self.df.iloc[self.t]["beta_kalman"]
         ret_g  = (p_g_n - p_g_t) / p_g_t
         ret_s  = (p_s_n - p_s_t) / p_s_t
-        spread_ret = ret_g - beta * ret_s
-        gross_pnl = new_position * spread_ret
+        weights = pair_weights(
+            pd.Series([float(new_position)]),
+            pd.Series([float(beta)]),
+            normalize_gross=True,
+        ).iloc[0]
+        target_gold_weight = float(weights["gold_weight"])
+        target_silver_weight = float(weights["silver_weight"])
+        gross_pnl = target_gold_weight * ret_g + target_silver_weight * ret_s
 
-        # Costos: 2 piernas (oro y plata) cada cambio de unidad
-        d_pos = abs(new_position - self.position)
-        cost = d_pos * self.cost * 2
+        # Costos sobre turnover real de ambas piernas, incluyendo rehedge por beta.
+        turnover = abs(target_gold_weight - self.gold_weight) + abs(
+            target_silver_weight - self.silver_weight
+        )
+        cost = turnover * self.cost
 
         # Penalizacion de turnover (opcional, shaping)
-        turnover_pen = self.turnover_penalty * d_pos
+        turnover_pen = self.turnover_penalty * turnover
+
+        self.gold_weight = target_gold_weight
+        self.silver_weight = target_silver_weight
 
         return gross_pnl - cost - turnover_pen
 
@@ -98,6 +111,8 @@ class PairTradingEnv(gym.Env):
         else:
             self.t = 0
         self.position = 0
+        self.gold_weight = 0.0
+        self.silver_weight = 0.0
         self.equity = 1.0
         self.trades = 0
         self.steps = 0

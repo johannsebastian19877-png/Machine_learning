@@ -2,7 +2,7 @@
 
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue)](https://www.python.org)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-41%20passed-brightgreen)](tests/)
+[![Tests](https://img.shields.io/badge/tests-46%20passed-brightgreen)](tests/)
 [![Code Style: ruff](https://img.shields.io/badge/code%20style-ruff-blue)](https://github.com/astral-sh/ruff)
 
 Pipeline end-to-end de **pair trading** sobre el spread Oro-Plata. Combina:
@@ -73,7 +73,7 @@ project_final/
 ├── envs/
 │   └── pair_trading_env.py      # MDP custom (importado por 7-9)
 │
-├── tests/                       # 41 tests unitarios + smoke
+├── tests/                       # 46 tests unitarios + smoke
 │   ├── conftest.py
 │   ├── test_imports.py
 │   ├── test_env.py
@@ -92,8 +92,7 @@ project_final/
 ├── run_all.sh / run_all.ps1     # Scripts cross-platform
 ├── pyproject.toml               # pytest + ruff
 │
-├── PLAN_PROYECTO.md             # Diseño detallado de las 9 fases
-├── AUDITORIA.md                 # Informe de auditoria final
+├── INFORME_FINAL_PROYECTO.md    # Informe consolidado vigente
 └── LICENSE                      # MIT
 ```
 
@@ -115,20 +114,23 @@ project_final/
 
 ---
 
-## Resultados (test set 2022+)
+## Resultados corregidos (ventana 2022-2026, test 2025+)
+
+Metricas recalculadas con PnL normalizado por exposicion bruta del spread y costos
+por turnover real de las dos piernas.
 
 | Estrategia | Sharpe | Sortino | Max DD | Calmar | Final Equity |
 |---|---|---|---|---|---|
-| Z-score Benchmark | **+0.13** | +0.09 | -13.2% | +0.06 | 1.032 |
-| LSTM Policy | +0.05 | +0.06 | -31.2% | -0.01 | 0.984 |
-| PPO Agent | -0.46 | -0.61 | -36.1% | -0.23 | 0.688 |
+| Z-score Benchmark | **+0.76** | +0.44 | -6.5% | +1.15 | 1.104 |
+| LSTM Policy | -0.51 | -0.53 | -28.7% | -0.35 | 0.866 |
+| PPO Agent | +0.02 | +0.01 | -6.7% | -0.02 | 0.998 |
 
 ### Hallazgos clave
 
-- **Cointegracion rescatada con Kalman**: 4.9% → **97.8%** de ventanas estacionarias.
-- **LSTM**: AUC 0.66, accuracy 60.5% en test (sin overfitting).
-- **PPO subentrenado** (100k timesteps); requeriria 1M+ para producion.
-- Reporte completo en [AUDITORIA.md](AUDITORIA.md).
+- **Cointegracion dinamica**: el spread Kalman alcanza 100% de ventanas estacionarias en la corrida 2022-2026.
+- **LSTM**: AUC test 0.629, pero la politica de trading pierde dinero.
+- **Ventana corta 2022-2026**: el benchmark simple mejora en test 2025+, pero LSTM no generaliza y PPO queda casi plano.
+- Reporte completo en [INFORME_FINAL_PROYECTO.md](INFORME_FINAL_PROYECTO.md).
 
 ---
 
@@ -154,10 +156,10 @@ make lint         # Ruff sobre envs/ y tests/
 | **Seeds deterministicos** | `torch.manual_seed(42)`, `np.random.seed(42)`, PPO `seed=42` |
 | **Paths cross-platform** | `pathlib.Path` en todo el codigo |
 | **CI multi-plataforma** | GitHub Actions: Ubuntu/Mac/Win × Py 3.10/3.11/3.12 |
-| **Tests automaticos** | 41 tests cubren imports, env, determinismo, estructura |
-| **Anti-leakage** | Standardizers `fit` solo en train; features causales |
+| **Tests automaticos** | 46 tests cubren imports, env, determinismo, estructura, splits purgados y contabilidad del backtest |
+| **Anti-leakage** | Standardizers `fit` solo en train purgado; GARCH/HMM globales siguen como limitacion a corregir |
 
-**Nota sobre los datos**: `yfinance` descarga datos hasta el dia actual. Para reproducibilidad estricta, fijar `END_DATE` en `params.yaml` y propagar al notebook 01.
+**Nota sobre los datos**: la corrida actual fija `START_DATE=2022-01-01` y `END_DATE=2026-05-23` para reproducibilidad. `yfinance` interpreta `end` como fecha exclusiva.
 
 ---
 

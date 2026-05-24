@@ -61,4 +61,4 @@ clean:
 	rm -rf logs/
 
 lint:
-	$(PYTHON) -m ruff check envs/ tests/
+	$(PYTHON) -m ruff check src/ envs/ tests/
