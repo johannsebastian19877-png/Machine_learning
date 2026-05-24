@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arbitraje Estadistico Oro/Plata - Presentacion</title>
+  <style>
+    :root {
+      --ink: #17202a;
+      --muted: #5d6d7e;
+      --paper: #f7f4ec;
+      --panel: #ffffff;
+      --gold: #c99a2e;
+      --silver: #8793a3;
+      --teal: #1f7a78;
+      --red: #b94b4b;
+      --blue: #2f5f9f;
+      --line: rgba(23, 32, 42, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(110deg, rgba(201,154,46,.12), rgba(31,122,120,.08)),
+        var(--paper);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 42px 58px 34px;
+      gap: 26px;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .slide.active {
+      display: grid;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 14px;
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      color: var(--teal);
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    h1, h2 {
+      margin: 0;
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    h1 { font-size: 54px; max-width: 900px; }
+    h2 { font-size: 42px; max-width: 980px; }
+
+    .owner {
+      min-width: 130px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.68);
+      font-weight: 700;
+      text-align: center;
+      color: var(--blue);
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 28px;
+      min-height: 0;
+      align-items: center;
+    }
+
+    .content.single {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+
+    .lead {
+      font-size: 25px;
+      line-height: 1.32;
+      margin: 0 0 22px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 23px;
+      font-size: 24px;
+      line-height: 1.35;
+    }
+
+    li { margin: 9px 0; }
+
+    .small-list {
+      font-size: 19px;
+      line-height: 1.32;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 12px 30px rgba(23, 32, 42, .06);
+    }
+
+    .metric b {
+      display: block;
+      font-size: 34px;
+      color: var(--blue);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: 0 12px 30px rgba(23, 32, 42, .06);
+    }
+
+    .table th, .table td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+    }
+
+    .table th:first-child, .table td:first-child { text-align: left; }
+    .table th { color: var(--blue); font-size: 15px; text-transform: uppercase; }
+    .good { color: var(--teal); font-weight: 800; }
+    .bad { color: var(--red); font-weight: 800; }
+    .warn { color: var(--gold); font-weight: 800; }
+
+    .visual {
+      min-height: 260px;
+      background: rgba(255,255,255,.72);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: 0 14px 32px rgba(23, 32, 42, .08);
+      display: grid;
+      place-items: center;
+    }
+
+    .visual img {
+      max-width: 100%;
+      max-height: 420px;
+      object-fit: contain;
+      border-radius: 4px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .step {
+      border-left: 5px solid var(--gold);
+      background: var(--panel);
+      padding: 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      min-height: 74px;
+      display: flex;
+      align-items: center;
+    }
+
+    .codebox {
+      background: #17202a;
+      color: #f7f4ec;
+      padding: 18px;
+      border-radius: 8px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 20px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    footer {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: end;
+      color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 12px;
+    }
+
+    .notes {
+      font-size: 16px;
+      line-height: 1.32;
+      color: #2d3742;
+      max-height: 84px;
+      overflow: auto;
+    }
+
+    .counter {
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .controls {
+      position: fixed;
+      right: 22px;
+      bottom: 18px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 10px 13px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(23, 32, 42, .08);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(31,122,120,.12);
+      color: var(--teal);
+      font-size: 15px;
+      font-weight: 800;
+      margin: 4px 5px 4px 0;
+    }
+
+    @media print {
+      body { overflow: visible; background: white; }
+      .deck { height: auto; }
+      .slide {
+        display: grid !important;
+        page-break-after: always;
+        height: 100vh;
+      }
+      .controls { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck">
+    <section class="slide active">
+      <header><div><p class="kicker">Proyecto final ML</p><h1>Arbitraje estadistico Oro/Plata</h1></div><div class="owner">Persona 1</div></header>
+      <div class="content">
+        <div>
+          <p class="lead">Pipeline completo con Kalman Filter, LSTM y PPO para evaluar si machine learning mejora una regla clasica de z-score.</p>
+          <div class="metric-grid">
+            <div class="metric"><b>2022-2026</b><span>ventana de datos</span></div>
+            <div class="metric"><b>3</b><span>estrategias</span></div>
+            <div class="metric"><b>9</b><span>fases</span></div>
+          </div>
+        </div>
+        <div class="visual"><img src="../data/final_comparison.png" alt="Comparacion final"></div>
+      </div>
+      <footer><div class="notes">Persona 1: presentar el proyecto, decir que la conclusion honesta es que el benchmark z-score gana sobre LSTM y PPO en test.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Pregunta objetivo</p><h2>Puede ML mejorar el arbitraje estadistico oro/plata?</h2></div><div class="owner">Persona 1</div></header>
+      <div class="content">
+        <ul>
+          <li>Modelar la relacion oro/plata con beta dinamico.</li>
+          <li>Predecir direccion futura del spread con LSTM.</li>
+          <li>Usar PPO para decidir long, short o flat.</li>
+          <li>Comparar todo contra un benchmark z-score.</li>
+        </ul>
+        <div class="codebox">Pregunta:
+¿Kalman + LSTM + PPO supera a una regla clasica de z-score en test out-of-sample?</div>
+      </div>
+      <footer><div class="notes">Persona 1: explicar la pregunta general y las tres subpreguntas: beta dinamico, prediccion LSTM y ejecucion PPO.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Hipotesis</p><h2>La relacion no es fija: cambia por regimenes</h2></div><div class="owner">Persona 1</div></header>
+      <div class="content">
+        <div>
+          <p class="lead">Oro y plata comparten factores macro, pero la plata tiene una componente industrial mas fuerte.</p>
+          <span class="pill">inflacion</span><span class="pill">tasas reales</span><span class="pill">USD</span><span class="pill">demanda industrial</span>
+        </div>
+        <div class="visual"><img src="../data/normalized_prices.png" alt="Precios normalizados"></div>
+      </div>
+      <footer><div class="notes">Persona 1: la hipotesis es que beta varia en el tiempo; por eso usamos Kalman en vez de quedarnos con una regresion estatica.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Arquitectura</p><h2>Nueve fases, de datos a backtest</h2></div><div class="owner">Persona 1</div></header>
+      <div class="content single">
+        <div class="flow">
+          <div class="step">1. Ingesta</div><div class="step">2. Cointegracion estatica</div><div class="step">3. Kalman</div>
+          <div class="step">4. Features</div><div class="step">5. Benchmark</div><div class="step">6. LSTM</div>
+          <div class="step">7. Gym</div><div class="step">8. PPO</div><div class="step">9. Backtest</div>
+        </div>
+      </div>
+      <footer><div class="notes">Persona 1: recorrer las nueve fases y mencionar los modulos src/backtest.py, src/splits.py y envs/pair_trading_env.py.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Datos</p><h2>Panel diario 2022-2026</h2></div><div class="owner">Persona 1</div></header>
+      <div class="content">
+        <div class="metric-grid">
+          <div class="metric"><b>1102</b><span>observaciones</span></div>
+          <div class="metric"><b>18.83%</b><span>vol oro</span></div>
+          <div class="metric"><b>41.11%</b><span>vol plata</span></div>
+          <div class="metric"><b>0.7718</b><span>correlacion</span></div>
+          <div class="metric"><b>GC=F</b><span>oro</span></div>
+          <div class="metric"><b>SI=F</b><span>plata</span></div>
+        </div>
+        <div class="visual"><img src="../data/normalized_prices.png" alt="Datos oro plata"></div>
+      </div>
+      <footer><div class="notes">Persona 1: explicar que la plata esta mas volatil de lo esperado, pero la correlacion es coherente para un pair trade.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Cointegracion estatica</p><h2>El beta fijo no sostiene el spread</h2></div><div class="owner">Persona 1</div></header>
+      <div class="content">
+        <ul>
+          <li>ADF spread estatico: p = 0.193981.</li>
+          <li>Johansen Trace: rango 0.</li>
+          <li>Johansen Max-Eigen: rango 0.</li>
+          <li>Conclusion: no hay cointegracion estatica robusta.</li>
+        </ul>
+        <div class="visual"><img src="../data/spread_bands.png" alt="Spread estatico"></div>
+      </div>
+      <footer><div class="notes">Persona 1: remarcar que el diagnostico estatistico motiva usar beta dinamico.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Kalman Filter</p><h2>Beta dinamico y spread mas estacionario</h2></div><div class="owner">Persona 1</div></header>
+      <div class="content">
+        <div>
+          <p class="lead">Modelo de estado: alpha_t y beta_t se actualizan diariamente.</p>
+          <div class="metric-grid">
+            <div class="metric"><b>2.4%</b><span>ventanas estacionarias beta fijo</span></div>
+            <div class="metric"><b>100%</b><span>ventanas estacionarias Kalman</span></div>
+            <div class="metric"><b>0.000</b><span>ADF p-value post warm-up</span></div>
+          </div>
+        </div>
+        <div class="visual"><img src="../data/kalman_beta.png" alt="Beta Kalman"></div>
+      </div>
+      <footer><div class="notes">Persona 1: explicar que Kalman mejora el objeto operable, pero no es prueba definitiva de cointegracion clasica.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Transicion</p><h2>Del spread dinamico a machine learning</h2></div><div class="owner">Persona 1</div></header>
+      <div class="content">
+        <ul>
+          <li>Ya tenemos un spread mas estable.</li>
+          <li>Ahora queremos predecir su direccion.</li>
+          <li>Despues queremos transformar prediccion en decisiones.</li>
+        </ul>
+        <div class="visual"><img src="../data/rolling_adf.png" alt="ADF rolling"></div>
+      </div>
+      <footer><div class="notes">Persona 1: cerrar la parte econometrica y pasarle la palabra a Persona 2 para la seccion ML.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Machine Learning</p><h2>Features para capturar estado del mercado</h2></div><div class="owner">Persona 2</div></header>
+      <div class="content">
+        <ul class="small-list">
+          <li>Spread: z-score, EMA 5, EMA 20, volatilidad.</li>
+          <li>Volatilidad: GARCH oro y plata.</li>
+          <li>Tecnicos: RSI y Bollinger percent B.</li>
+          <li>Ratio: GSR z-score.</li>
+          <li>Regimen: HMM.</li>
+          <li>Momentum: retornos 5 y 20 dias.</li>
+          <li>Hedge: beta Kalman.</li>
+        </ul>
+        <div class="visual"><img src="../data/feature_corr.png" alt="Correlacion features"></div>
+      </div>
+      <footer><div class="notes">Persona 2: destacar que ML no empieza en el modelo, empieza en convertir el mercado en variables informativas.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Target y splits</p><h2>Prediccion direccional a 5 dias</h2></div><div class="owner">Persona 2</div></header>
+      <div class="content">
+        <div class="codebox">target = 1 si spread(t+5) - spread(t) > 0
+target = 0 en caso contrario
+
+Train: 2022-2023
+Validation: 2024
+Test: 2025-2026
+Purging: elimina targets que cruzan frontera</div>
+        <div class="metric-grid">
+          <div class="metric"><b>436</b><span>train purgado</span></div>
+          <div class="metric"><b>247</b><span>validation purgado</span></div>
+          <div class="metric"><b>345</b><span>test</span></div>
+        </div>
+      </div>
+      <footer><div class="notes">Persona 2: explicar por que el purging evita fuga temporal en targets forward-looking.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">LSTM</p><h2>Modelo secuencial sobre 60 dias</h2></div><div class="owner">Persona 2</div></header>
+      <div class="content">
+        <ul>
+          <li>Entrada: 60 dias x 15 features.</li>
+          <li>LSTM hidden size 32.</li>
+          <li>Head densa: 16 neuronas + ReLU + Dropout.</li>
+          <li>Loss: CrossEntropy.</li>
+          <li>Optimizador: Adam + weight decay.</li>
+          <li>Early stopping con validation loss.</li>
+        </ul>
+        <div class="visual"><img src="../data/lstm_training.png" alt="Entrenamiento LSTM"></div>
+      </div>
+      <footer><div class="notes">Persona 2: enfatizar que el LSTM intenta capturar patrones temporales que una regla z-score no ve.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Metricas predictivas</p><h2>El LSTM aprende, pero se degrada en test</h2></div><div class="owner">Persona 2</div></header>
+      <div class="content single">
+        <table class="table">
+          <tr><th>Split</th><th>Accuracy</th><th>AUC</th><th>Brier</th></tr>
+          <tr><td>Validation</td><td class="good">0.7219</td><td class="good">0.7340</td><td>0.2042</td></tr>
+          <tr><td>Test</td><td class="warn">0.5825</td><td class="warn">0.6289</td><td>0.2518</td></tr>
+        </table>
+      </div>
+      <footer><div class="notes">Persona 2: explicar que AUC sobre azar no implica PnL positivo. Esta distincion es central.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Politica LSTM</p><h2>La prediccion no se tradujo en rentabilidad</h2></div><div class="owner">Persona 2</div></header>
+      <div class="content">
+        <ul>
+          <li>Long si probabilidad &gt; 0.55.</li>
+          <li>Short si probabilidad &lt; 0.45.</li>
+          <li>Flat en la zona intermedia.</li>
+          <li>Activa 59.7% del test.</li>
+          <li>Turnover: 55.17x capital.</li>
+        </ul>
+        <div class="metric-grid">
+          <div class="metric"><b>-0.506</b><span>Sharpe test</span></div>
+          <div class="metric"><b>0.866</b><span>equity final</span></div>
+          <div class="metric"><b>-28.7%</b><span>MaxDD</span></div>
+        </div>
+      </div>
+      <footer><div class="notes">Persona 2: remarcar que la mala calibracion economica y el turnover destruyen la senal predictiva.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Entorno Gym</p><h2>Simulador de trading para RL</h2></div><div class="owner">Persona 2</div></header>
+      <div class="content">
+        <ul>
+          <li>Acciones: short, flat, long.</li>
+          <li>Estado: features + probabilidad LSTM + posicion actual.</li>
+          <li>Reward: PnL neto con costos.</li>
+          <li>Contabilidad: exposicion bruta y turnover real.</li>
+        </ul>
+        <div class="visual"><img src="../data/env_baselines.png" alt="Baselines entorno"></div>
+      </div>
+      <footer><div class="notes">Persona 2: explicar que el entorno permite evaluar politicas de forma consistente con el backtest corregido.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">PPO</p><h2>El agente de reinforcement learning</h2></div><div class="owner">Persona 2</div></header>
+      <div class="content">
+        <ul>
+          <li>Algoritmo: Proximal Policy Optimization.</li>
+          <li>Libreria: Stable-Baselines3.</li>
+          <li>Politica MLP: [64, 64].</li>
+          <li>Entrenamiento: 100000 timesteps.</li>
+          <li>Acciones discretas: 0, 1, 2.</li>
+        </ul>
+        <div class="visual"><img src="../data/ppo_equity.png" alt="PPO equity"></div>
+      </div>
+      <footer><div class="notes">Persona 2: decir que PPO fue el trader automatico, pero no logro superar al benchmark.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Lectura ML</p><h2>Mas complejidad no garantizo mejor PnL</h2></div><div class="owner">Persona 2</div></header>
+      <div class="content single">
+        <table class="table">
+          <tr><th>Componente</th><th>Resultado</th><th>Lectura</th></tr>
+          <tr><td>LSTM</td><td>AUC test 0.6289</td><td>Aprende senal direccional parcial</td></tr>
+          <tr><td>LSTM Policy</td><td>Sharpe -0.506</td><td>No convierte senal en PnL</td></tr>
+          <tr><td>PPO</td><td>Sharpe 0.019</td><td>Conservador, casi plano</td></tr>
+        </table>
+      </div>
+      <footer><div class="notes">Persona 2: cerrar la seccion ML con una idea fuerte: clasificacion positiva no equivale a estrategia rentable.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Backtest</p><h2>Contabilidad corregida del spread</h2></div><div class="owner">Persona 3</div></header>
+      <div class="content">
+        <div class="codebox">gross_exposure = 1 + abs(beta)
+gold_weight = position / gross_exposure
+silver_weight = -position * beta / gross_exposure
+costs = turnover_real * cost_bps</div>
+        <ul>
+          <li>Senales rezagadas para evitar look-ahead.</li>
+          <li>Costos por las dos piernas.</li>
+          <li>Metricas anualizadas sobre PnL neto.</li>
+        </ul>
+      </div>
+      <footer><div class="notes">Persona 3: explicar que esta correccion evita sobreestimar el PnL al ignorar exposicion bruta.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Resultados finales</p><h2>Benchmark z-score gana en test 2025+</h2></div><div class="owner">Persona 3</div></header>
+      <div class="content single">
+        <table class="table">
+          <tr><th>Estrategia</th><th>Sharpe</th><th>Sortino</th><th>MaxDD</th><th>Calmar</th><th>Equity</th></tr>
+          <tr><td>Z-score Benchmark</td><td class="good">0.7617</td><td>0.4401</td><td>-6.52%</td><td class="good">1.1500</td><td class="good">1.1041</td></tr>
+          <tr><td>LSTM Policy</td><td class="bad">-0.5063</td><td>-0.5276</td><td>-28.74%</td><td>-0.3477</td><td class="bad">0.8658</td></tr>
+          <tr><td>PPO Agent</td><td>0.0188</td><td>0.0098</td><td>-6.74%</td><td>-0.0224</td><td>0.9979</td></tr>
+        </table>
+      </div>
+      <footer><div class="notes">Persona 3: presentar el resultado central: la regla simple gana; ML no mejora el PnL en esta corrida.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Costos</p><h2>El benchmark resiste mejor el aumento de costos</h2></div><div class="owner">Persona 3</div></header>
+      <div class="content">
+        <ul>
+          <li>Benchmark Sharpe con 0 bps: 0.8550.</li>
+          <li>Benchmark Sharpe con 5 bps: 0.7617.</li>
+          <li>Benchmark sigue positivo con 20 bps.</li>
+          <li>LSTM es negativo en todos los costos evaluados.</li>
+        </ul>
+        <div class="visual"><img src="../data/cost_sensitivity.png" alt="Sensibilidad a costos"></div>
+      </div>
+      <footer><div class="notes">Persona 3: conectar sensibilidad con turnover: estrategias que operan demasiado son castigadas por costos.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">KPIs</p><h2>Se cumplen algunos objetivos, pero no el Sharpe objetivo</h2></div><div class="owner">Persona 3</div></header>
+      <div class="content single">
+        <table class="table">
+          <tr><th>KPI</th><th>Objetivo</th><th>Resultado</th><th>Estado</th></tr>
+          <tr><td>Sharpe</td><td>&gt;= 1.5</td><td>0.7617</td><td class="bad">No cumple</td></tr>
+          <tr><td>Sortino</td><td>&gt;= 2.0</td><td>0.4401</td><td class="bad">No cumple</td></tr>
+          <tr><td>MaxDD</td><td>&lt;= 15%</td><td>-6.52%</td><td class="good">Cumple benchmark</td></tr>
+          <tr><td>Calmar</td><td>&gt;= 1.0</td><td>1.1500</td><td class="good">Cumple benchmark</td></tr>
+          <tr><td>Market-neutrality</td><td>beta S&P500</td><td>No calculado</td><td class="warn">Pendiente</td></tr>
+        </table>
+      </div>
+      <footer><div class="notes">Persona 3: ser transparente: el proyecto no alcanza Sharpe objetivo, aunque si mejora en drawdown y Calmar para benchmark.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Hallazgos</p><h2>Lo que aprendimos</h2></div><div class="owner">Persona 3</div></header>
+      <div class="content single">
+        <ul>
+          <li>No hay cointegracion estatica robusta.</li>
+          <li>Kalman mejora la estacionariedad del spread.</li>
+          <li>El benchmark z-score es la mejor estrategia out-of-sample.</li>
+          <li>LSTM clasifica razonablemente, pero opera mal.</li>
+          <li>PPO no agrega valor en esta configuracion.</li>
+          <li>La ventana corta favorece un regimen especifico.</li>
+        </ul>
+      </div>
+      <footer><div class="notes">Persona 3: convertir resultados en conclusiones metodologicas, no solo en una tabla de numeros.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Limitaciones</p><h2>Lo que todavia no queda cerrado</h2></div><div class="owner">Persona 3</div></header>
+      <div class="content single">
+        <ul>
+          <li>GARCH y HMM siguen ajustados globalmente.</li>
+          <li>No hay walk-forward completo con reentrenamiento.</li>
+          <li>No hay bootstrap ni intervalo del Sharpe.</li>
+          <li>No se calculo beta vs S&P500.</li>
+          <li>PPO no reporta turnover/costos en tabla final.</li>
+          <li>Los notebooks aun contienen bastante logica.</li>
+        </ul>
+      </div>
+      <footer><div class="notes">Persona 3: mostrar rigor. Reconocer limitaciones hace que el proyecto sea mas defendible.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Reproducibilidad</p><h2>Artefactos y pruebas</h2></div><div class="owner">Persona 3</div></header>
+      <div class="content">
+        <ul class="small-list">
+          <li>data/final_metrics.csv</li>
+          <li>data/final_report.json</li>
+          <li>data/features.parquet</li>
+          <li>data/features_with_lstm.parquet</li>
+          <li>models/lstm_best.pt</li>
+          <li>models/ppo_agent.zip</li>
+          <li>46 tests vigentes</li>
+        </ul>
+        <div class="codebox">make all
+make test
+python -m pytest -q</div>
+      </div>
+      <footer><div class="notes">Persona 3: explicar que el proyecto se puede reconstruir con notebooks en orden y que hay tests para estructura, entorno, splits y backtest.</div><div class="counter"></div></footer>
+    </section>
+
+    <section class="slide">
+      <header><div><p class="kicker">Cierre</p><h2>Respuesta final</h2></div><div class="owner">Persona 3</div></header>
+      <div class="content">
+        <p class="lead">No encontramos evidencia suficiente de que LSTM o PPO superen al benchmark z-score. Si encontramos que Kalman produce un spread mas estacionario y que una regla simple puede ser mas robusta que modelos complejos.</p>
+        <div class="metric-grid">
+          <div class="metric"><b>Si</b><span>pipeline completo</span></div>
+          <div class="metric"><b>No</b><span>Sharpe objetivo</span></div>
+          <div class="metric"><b>Clave</b><span>ML no garantiza PnL</span></div>
+        </div>
+      </div>
+      <footer><div class="notes">Persona 3: cerrar con la conclusion academica: el resultado es valioso porque reporta honestamente cuando ML no gana.</div><div class="counter"></div></footer>
+    </section>
+  </main>
+
+  <div class="controls">
+    <button id="prev" title="Anterior">Anterior</button>
+    <button id="next" title="Siguiente">Siguiente</button>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    let index = 0;
+
+    function show(i) {
+      index = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((slide, n) => slide.classList.toggle('active', n === index));
+      document.querySelectorAll('.counter').forEach(el => {
+        el.textContent = `${index + 1} / ${slides.length}`;
+      });
+    }
+
+    document.getElementById('prev').addEventListener('click', () => show(index - 1));
+    document.getElementById('next').addEventListener('click', () => show(index + 1));
+    document.addEventListener('keydown', event => {
+      if (['ArrowRight', 'PageDown', ' '].includes(event.key)) show(index + 1);
+      if (['ArrowLeft', 'PageUp'].includes(event.key)) show(index - 1);
+      if (event.key === 'Home') show(0);
+      if (event.key === 'End') show(slides.length - 1);
+    });
+
+    show(0);
+  </script>
+</body>
+</html>
